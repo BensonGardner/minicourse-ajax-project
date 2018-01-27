@@ -5,6 +5,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     pump = require('pump'),
     cleanCSS = require('gulp-clean-css'),
+    git = require('gulp-git'),
     htmlmin = require('gulp-htmlmin');
 
 gulp.task('minify', function() {
@@ -37,4 +38,13 @@ gulp.task('images', function() {
     .pipe(gulp.dest(final));
 });
 
-gulp.task('default', ['minify-css', 'compress', 'minify', 'images']);
+// Run git commit with options
+gulp.task('commit', function(message) {
+  return gulp.src('source/**')
+    .pipe(git.commit(message, {args: '-A --amend -s'}));
+});
+
+
+gulp.task('default', function(message) {
+    ['minify-css', 'compress', 'minify', 'images', 'commit'];
+});
