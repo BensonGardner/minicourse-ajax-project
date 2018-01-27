@@ -21,7 +21,7 @@ function loadData() {
     var streetviewPic = '<img class="bgimg" src="https://maps.googleapis.com/maps/api/streetview?size=' + screensize + '&location=' + location + '&key=AIzaSyBgc50Xz6iyvL7p7T9cFTrzWW0N0MFTpdw">';
     $body.append(streetviewPic);
    
-    $.getJSON('http://api.nytimes.com/svc/search/v2/articlesearch.json', {
+    $.getJSON('http://api.nytimesBLARGYTEST.com/svc/search/v2/articlesearch.json', {
         'api-key' : 'c1b441f0bb5844edbd466502406ae508',
         'q' : city.value
     }, function(data){
@@ -30,9 +30,11 @@ function loadData() {
         data.response.docs.forEach(function(article) {
             console.log(article.headline.main);
             console.log(article.snippet);
-            $(".article-list").append('<li class="article"><a href="' + article.web_url + '">' + article.headline.main + '</a><p>"' + article.snippet + '"</p></li>');
-        })
-    });
+            $('.article-list').append('<li class="article"><a href="' + article.web_url + '">' + article.headline.main + '</a><p>"' + article.snippet + '"</p></li>');
+        });
+    }).fail(function() {
+        $nytHeaderElem.text('New York Times Articles Could Not Be Loaded.');
+            });
 
     return false;
 }
