@@ -55,7 +55,7 @@ function loadData() {
             // parameter to an asterisk. 
             // This eliminates the console error, but it still
             // results in a fail() . 
-            'origin' : '*',
+            // 'origin' : '*',
             'callback' : 'function(response) {console.log(response);}',
             'titles' : city.value,
             //'headers' : {'Api-User-Agent' : 'Project for web development learning purposes. Benson Gardner, bensongardner@yahoo.com'}
