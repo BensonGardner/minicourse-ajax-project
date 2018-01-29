@@ -6,6 +6,14 @@ function loadData() {
     var $nytHeaderElem = $('#nytimes-header');
     var $nytElem = $('#nytimes-articles');
     var $greeting = $('#greeting');
+
+    // callback function to pass to Wikipedia via JSONP
+    var cb = function(response) {
+        console.log(response);
+        data.titles.forEach(function(article) {
+            $wikiElem.append('<li class="article"><a href="' + data.query.pages.title + '">' + data.query.pages.title + '</a></li>');
+        });
+    };
     
     // clear out old data before new request
     $wikiElem.text('');
@@ -35,8 +43,32 @@ function loadData() {
     }).fail(function() {
         $nytHeaderElem.text('New York Times Articles Could Not Be Loaded.');
             });
-
+    
+    $.ajax('https://en.wikipedia.org/w/api.php' , {
+        // I experimented with setting the datatype to 'script' and 'text'
+        // but to no avail
+        'datatype' : 'jsonp',
+        'data' : {
+            'action' : 'query',
+            'format' : 'json',
+            // Something I found on stackoverflow said to set the origin
+            // parameter to an asterisk. 
+            // This eliminates the console error, but it still
+            // results in a fail() . 
+            'origin' : '*',
+            'callback' : 'function(response) {console.log(response);}',
+            'titles' : city.value,
+            //'headers' : {'Api-User-Agent' : 'Project for web development learning purposes. Benson Gardner, bensongardner@yahoo.com'}
+        },
+        'success' : 'cb'
+    }).fail(function() {
+        // we don't have a wiki header element right now, but 
+        // I'm guessing we will implement error handling with 
+        // a similar message
+        console.log('problem, sir');
+    });
+    
     return false;
-}
+};
 
 $('#form-container').submit(loadData);
