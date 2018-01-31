@@ -44,23 +44,42 @@ function loadData() {
         $nytHeaderElem.text('New York Times Articles Could Not Be Loaded.');
             });
     
-    $.ajax('https://en.wikipedia.org/w/api.php' , {
+    // JQuery's documentation at 
+    //   http://api.jquery.com/jquery.ajax/ 
+    // explains that the success function is passed 
+    // these 3 arguments.
+    var wikiLoad = function(data, status, xhrObject) {
+        console.log(data);
+        console.log(status);
+        console.log(xhrObject);
+        // I'm going to try to search in some way other than by title, then plug in the list of titles and URLs.
+    }
+    
+    /* alternate approach to using the API - but this URL method doesn't allow the origin: '*' workaround
+        var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&titles=' + city.value + '&format=json';
+    */
+
+    $.ajax({
+        url: 'https://en.wikipedia.org/w/api.php',
         // I experimented with setting the datatype to 'script' and 'text'
         // but to no avail
-        'datatype' : 'jsonp',
-        'data' : {
-            'action' : 'query',
-            'format' : 'json',
-            // Something I found on stackoverflow said to set the origin
-            // parameter to an asterisk. 
-            // This eliminates the console error, but it still
-            // results in a fail() . 
-            // 'origin' : '*',
-            'callback' : 'function(response) {console.log(response);}',
-            'titles' : city.value,
-            //'headers' : {'Api-User-Agent' : 'Project for web development learning purposes. Benson Gardner, bensongardner@yahoo.com'}
+        datatype : 'jsonp',
+        data : {
+            action : 'query',
+            format : 'json',
+            // Something I found on stackoverflow 
+            // said to set the origin parameter 
+            // to an asterisk. 
+            // This eliminates the console error, and 
+            // DevTools reveals a response has arrived,
+            // but we aren't supposed to need it with jsonp.
+            origin : '*',
+            // Shouldn't need this since we're using the success parameter
+            // callback : 'function(response) {console.log(response)';},
+            titles : city.value,
         },
-        'success' : 'cb'
+        success : wikiLoad
+        //success : 'function(response, status, object) {console.log(response)}'
     }).fail(function() {
         // we don't have a wiki header element right now, but 
         // I'm guessing we will implement error handling with 
