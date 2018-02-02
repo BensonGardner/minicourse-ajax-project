@@ -33,12 +33,9 @@ function loadData() {
         'api-key' : 'c1b441f0bb5844edbd466502406ae508',
         'q' : city.value
     }, function(data){
-        console.log(data);
         $nytHeaderElem.text('New York Times Articles about ' + city.value);
         data.response.docs.forEach(function(article) {
-            console.log(article.headline.main);
-            console.log(article.snippet);
-            $('.article-list').append('<li class="article"><a href="' + article.web_url + '">' + article.headline.main + '</a><p>"' + article.snippet + '"</p></li>');
+             $('.article-list').append('<li class="article"><a href="' + article.web_url + '">' + article.headline.main + '</a><p>"' + article.snippet + '"</p></li>');
         });
     }).fail(function() {
         $nytHeaderElem.text('New York Times Articles Could Not Be Loaded.');
@@ -48,36 +45,30 @@ function loadData() {
     //   http://api.jquery.com/jquery.ajax/ 
     // explains that the success function is passed 
     // these 3 arguments.
-    var wikiLoad = function(data, status, xhrObject) {
-        console.log(data);
+    var wikiLoad = function(wikiData, status, xhrObject) {
+        console.log(wikiData);
         console.log(status);
         console.log(xhrObject);
-        // I'm going to try to search in some way other than by title, then plug in the list of titles and URLs.
-    }
-    
-    /* alternate approach to using the API - but this URL method doesn't allow the origin: '*' workaround
-        var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&titles=' + city.value + '&format=json';
-    */
+      
+        // data is returning the nyt data
+        
+        for (i = 0; i < wikiData.length; i++) {
+            $wikiElem.append('<li class="article"><a href="' + wikiData[3][i] + '">' + wikiData[1][i] + '</a><p>"' + wikiData[2][i] + '"</p></li>');    
+            console.log(wikiData + ' is king. So is ' + wikiData[1][i]);    
+        }; 
+    };
 
     $.ajax({
         url: 'https://en.wikipedia.org/w/api.php',
-        // I experimented with setting the datatype to 'script' and 'text'
-        // but to no avail
-        dataType : 'jsonp',
+        dataType: 'jsonp',
         type: 'GET',
-        data : {
-            action : 'query',
+        data: {
+            action: 'opensearch',
+            search: city.value,
             format : 'json',
-            // Something I found on stackoverflow 
-            // said to set the origin parameter 
-            // to an asterisk. 
-            // This eliminates the console error, and 
-            // DevTools reveals a response has arrived,
-            // but we aren't supposed to need it with jsonp.
-            // origin : '*',
-            // Shouldn't need this since we're using the success parameter
+            // don't think we need this
             // callback : 'function(response) {console.log(response)';},
-            titles : city.value,
+           // titles : city.value,
         },
         success : wikiLoad
         //success : 'function(response, status, object) {console.log(response)}'
