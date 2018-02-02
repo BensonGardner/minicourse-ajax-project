@@ -63,7 +63,8 @@ function loadData() {
         url: 'https://en.wikipedia.org/w/api.php',
         // I experimented with setting the datatype to 'script' and 'text'
         // but to no avail
-        datatype : 'jsonp',
+        dataType : 'jsonp',
+        type: 'GET',
         data : {
             action : 'query',
             format : 'json',
@@ -73,7 +74,7 @@ function loadData() {
             // This eliminates the console error, and 
             // DevTools reveals a response has arrived,
             // but we aren't supposed to need it with jsonp.
-            origin : '*',
+            // origin : '*',
             // Shouldn't need this since we're using the success parameter
             // callback : 'function(response) {console.log(response)';},
             titles : city.value,
